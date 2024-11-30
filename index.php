@@ -13,6 +13,7 @@ Autoloader::register();
 use Models\BDD;
 use Models\Article;
 use Models\Router;
+use Controllers\GameController;
 use Controllers\ErrorsController;
 use Controllers\ArticlesController;
 use Controllers\BlogController;
@@ -56,7 +57,7 @@ $article_test = [
 $router = new Router();
 
 $uri = $_SERVER["REQUEST_URI"];
-$idParam = (int) preg_replace(pattern: "/[\D]+/", replacement: "", subject: $uri);
+$idParam = (int) preg_replace("/[\D]+/", "",$uri);
 
 switch (true) {
     case ($uri === "/"):
@@ -64,7 +65,7 @@ switch (true) {
       break;
     case (str_contains(haystack: $uri, needle: "/articles")):
       if($idParam){
-        $router->get(uri: "/articles/$idParam", callback: ArticlesController::getById(id: $idParam));
+        $router->get("/articles/$idParam", ArticlesController::getById(id: $idParam));
         exit;
       }
       else if($idParam && str_contains($uri, "/update")){
@@ -78,10 +79,18 @@ switch (true) {
       }
 
       else if
-        (!$idParam && str_contains(haystack: $uri, needle: "/delete")){
-          $router->post(uri: "/articles/delete", callback: ArticlesController::deleteArticle());
+        (!$idParam && str_contains( $uri, "/delete")){
+          $router->post("/articles/delete", ArticlesController::deleteArticle());
+          exit;
         }
-      $router->get(uri: "/articles", callback: ArticlesController::getList());
+      $router->get("/articles", ArticlesController::getList());
+
+      case (str_contains($uri, "/roulette")):
+        $router->get("/roulette", GameController::index());
+        exit;
+      case (str_contains($uri, "/play")):
+        $router->get("/play", GameController::play());
+        exit;
       break;
       default:
         ErrorsController::launchError(code: 404);

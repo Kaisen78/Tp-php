@@ -1,6 +1,6 @@
 <?php
-
-on_start();
+$headTitle = "Accueil";
+ob_start();
 ?>
 
 <section class="main-sections">
@@ -8,11 +8,11 @@ on_start();
         <h1 class="main-articles-title">
             Bienvenue sur le meilleur site internet !!
         </h1>
-    <p>
-        Le meilleur joueur de tout les temps.
-    </p>
+        <p>
+            Le meilleur joueur de tout les temps.
+        </p>
     </article>
 </section>
 
 <?php
-$mainContent = ob_end_clean();
+$mainContent = ob_get_clean();
